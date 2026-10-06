@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.safetensors
+*.safetensors.partial
+*.partial
+*.lock
+*.log
+*.tmp
+/models/
+/config.local.json
+/extra_model_paths.local.yaml
+/tmp/

@@ -1,0 +1,33 @@
+{
+  "name": "PDMD 2-NFE INT8 ConvRot fusion",
+  "base": {
+    "bytes": 20970379616,
+    "sha256": "e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a"
+  },
+  "lora": {
+    "bytes": 1956194168,
+    "sha256": "5feaeef13df31f98f36364a95e7ce9e8ff0afd71570d1c53d7c3be599e3a0f22",
+    "strength": 1.0
+  },
+  "comfyui_commit": "6b747c0428c343e1417219641db93a4fb7cb69ae",
+  "x2_stream_commit": "eb148a3d0f91a273668bbe027bfcbafb85f2c5e8",
+  "comfyui_source_sha256": {
+    "comfy/lora.py": "fce6903ca8150611b3f6477c3772bfef0662a2b01747a579ff56b415a44c29bc",
+    "comfy/weight_adapter/lora.py": "5e30c8b8a22be6459883cb5d758fa76f725cc4688d4048200145b885567c4cec",
+    "comfy/model_patcher.py": "fc43f038835aeded2e64a0490f9d37795fb9d3c9490d9210ba11f1201aec4fd8",
+    "comfy/ops.py": "b00a293051bdf1f2525ffcd000cddfd10d8c32343969e7eb9ccf48e7b08e1eee",
+    "comfy/utils.py": "f5c3add7b7526877b3d828e690c28404cf03c13437af132d547f3d70fdb12e2b"
+  },
+  "int8_source_sha256": "307a4133908c07b4ffa04d3cb94991140afcef9b66da126809620f6184549614",
+  "sources": {
+    "base": "https://huggingface.co/Comfy-Org/MiniMax-H3/blob/main/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+    "lora": "https://huggingface.co/Iwannapose/minimax_h3_pdmd_2nfe_comfyui",
+    "x2_stream": "https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream",
+    "x2_vae": "https://huggingface.co/speach1sdef178/MiniMax-H3-X2-Detail-VAE"
+  },
+  "method": "Native ComfyUI CPU FP32 LoRA math, native INT8 ConvRot rowwise requantization, BF16 token-refiner output",
+  "modules": 208,
+  "int8_modules": 200,
+  "bf16_modules": 8,
+  "rebuild_limit": "A creation timestamp is embedded in metadata. Rebuilds have their own full-file hashes; validate source hashes and tensor verification."
+}
