@@ -2,11 +2,32 @@
 
 [日本語](README_ja.md) | English
 
-Generate MiniMax H3 first-frame video with a fused **PDMD two-step** model, **SLA keep 20%**, and **X2 VAE INT8 streaming**. The examples sample at **544 × 960** and save **1088 × 1920**, **124 frames at 24 fps**, with generated audio.
+**A ComfyUI package that uses a fused PDMD model to generate MiniMax H3 in two steps: 5-second 1088 × 1920 video with audio in about 44–50 seconds on an RTX 4070 12GB, about 20% faster than the usual four-step setup.**
+
+| FL2VA, 544 × 960 sampling → 1088 × 1920 output, 124 frames | Case 01 | Case 02 |
+|---|---:|---:|
+| 4 steps (MATLOW fused model, [ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream) example) | 62.6 s | 58.7 s |
+| **This repo: PDMD 2 steps** | **50.0 s** | **43.8 s** |
+| Saved | -12.6 s (-20%) | -14.9 s (-25%) |
+
+Measured on [Sayaka Benchmark](https://sayakabenchmark.pages.dev/), FL2VA tab (one run each). The four-step row is FL2VA [022](https://sayakabenchmark.pages.dev/benchmarks/fl2va/022-matlow-fused4-sla5-x2vae-int8-stream/workflow.json) (2026-10-02) and this repo is FL2VA [015](https://sayakabenchmark.pages.dev/benchmarks/fl2va/015-pdmd-fused2-sla20-x2vae-int8-stream/workflow.json) (2026-10-06), measured on different days (entry numbers on the site).
+
+**Known limitation: with only two steps, generated audio can be poor.** Consider a four-step setup when audio matters.
+
+**Terms**
+
+| Term | Meaning |
+|---|---|
+| PDMD | A distillation LoRA that lets H3 generate in two steps; this repo fuses it into the model |
+| Fusing | Baking the LoRA into the model weights and re-quantizing to INT8 as one model file; setup does this once on the CPU |
+| SLA keep 20% | ComfyUI's native sparse attention, computing only the important part (about 20%) |
+| X2 VAE INT8 streaming | Decodes the 544 × 960 latent to 1088 × 1920 while saving with NVENC in parallel |
+
+> Author: Kamimoto (かみもと) | Quick results on **[X (@sep_is_heim)](https://x.com/sep_is_heim)**, write-ups (Japanese) on **[note](https://note.com/sepiablue)** ([article index](https://note.com/sepiablue/n/n8e612c619a3e)).
+
+The examples sample at **544 × 960** and save **1088 × 1920**, **124 frames at 24 fps**, with generated audio.
 
 This package supplies installation, CPU model preparation and ready-to-load workflows. Keep it outside `ComfyUI/custom_nodes`. Setup installs the separate [ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream) dependency into your selected ComfyUI.
-
-The corresponding comparison is **FL2VA 015** on [Sayaka Benchmark](https://sayakabenchmark.pages.dev/). **Known limitation:** generated audio can be poor with this two-step preset.
 
 ## Included files
 
@@ -92,6 +113,21 @@ Preset: Euler/simple, two steps, BasicGuider, seed 43, video/audio shifts 12/3, 
 - Poor audio: this is a known limitation of the supplied two-step preset. CPU fusion and requantization can also change video/audio compared with applying the LoRA dynamically.
 
 For full CPU verification of an existing output, run your ComfyUI Python with `-B scripts/fuse_pdmd_cpu.py --config config.local.json --verify`. This reads the base, LoRA and output without rebuilding.
+
+## Author and related repositories
+
+I'm Kamimoto (かみもと). I measure and publish MiniMax H3 and ComfyUI speed-ups and VRAM reductions on an RTX 4070 12 GB.
+
+- X: [@sep_is_heim](https://x.com/sep_is_heim) — quick results with step counts, seconds and speed-ups
+- note: [かみもと｜ローカルAI生成](https://note.com/sepiablue) — setup guides and measured write-ups in Japanese ([article index](https://note.com/sepiablue/n/n8e612c619a3e))
+- [Sayaka Benchmark](https://sayakabenchmark.pages.dev/) — speed and quality comparison of H3 workflows
+
+| Repository | What it does |
+|---|---|
+| [ComfyUI-H3-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-X2-Stream) | INT8 X2 VAE and asynchronous NVENC saving; 5 s 1088×1920 video with audio in about 60 s |
+| [ComfyUI-MiniMax-H3-DMAD-X2](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-DMAD-X2) | 4-step model fused from the official FL2VA base and DMAD LoRA; about 1 minute |
+| [ComfyUI-MiniMax-H3-TaoMate-C3](https://github.com/sepiablue-ai/ComfyUI-MiniMax-H3-TaoMate-C3) | TaoMate-H3 3-step acceleration; 1024×1792 in about 2 min 27 s |
+| [ComfyUI-H3-LBH-X2-Stream](https://github.com/sepiablue-ai/ComfyUI-H3-LBH-X2-Stream) | 3 low-resolution steps + 1 high-resolution step; about 25% faster for 14 s video |
 
 ## License
 
